@@ -733,6 +733,8 @@ public class IndividualEnrollmentTest
     /* SRS_INDIVIDUAL_ENROLLMENT_21_037: [The getCreatedDateTimeUtc shall return a Date with the stored createdDateTimeUtcDate.] */
     /* SRS_INDIVIDUAL_ENROLLMENT_21_040: [The getLastUpdatedDateTimeUtc shall return a Date with the stored lastUpdatedDateTimeUtcDate.] */
     /* SRS_INDIVIDUAL_ENROLLMENT_21_046: [The getEtag shall return a String with the stored etag.] */
+    /* SRS_INDIVIDUAL_ENROLLMENT_34_052: [If the device capabilities is not null, the constructor shall judge and store it using the IndividualEnrollment setter.] */
+    /* SRS_INDIVIDUAL_ENROLLMENT_34_053: [This function shall save the provided capabilities.] */
     @Test
     public void gettersSimpleEnrollment() throws ProvisioningServiceClientException
     {
@@ -753,6 +755,9 @@ public class IndividualEnrollmentTest
                 "    \"tpm\": {\n" +
                 "      \"endorsementKey\": \"" + VALID_ENDORSEMENT_KEY + "\"\n" +
                 "    }\n" +
+                "  },\n" +
+                "  \"capabilities\": {\n" +
+                "    \"iotEdge\": \"true\"\n" +
                 "  },\n" +
                 "  \"initialTwin\" : {\n" +
                 "    \"tags\": {\n" +
@@ -775,6 +780,7 @@ public class IndividualEnrollmentTest
         IndividualEnrollment individualEnrollment = new IndividualEnrollment(json);
 
         // act - assert
+        assertTrue(individualEnrollment.getCapabilities().isIotEdge());
         assertEquals(VALID_REGISTRATION_ID, individualEnrollment.getRegistrationId());
         assertEquals(VALID_DEVICE_ID, individualEnrollment.getDeviceId());
         assertNotNull(individualEnrollment.getDeviceRegistrationState());
@@ -1322,6 +1328,22 @@ public class IndividualEnrollmentTest
 
         // assert
         assertEquals(newEtag, Deencapsulation.getField(individualEnrollment, "etag"));
+    }
+
+    /* SRS_INDIVIDUAL_ENROLLMENT_34_054: [This function shall return the saved capabilities.] */
+    @Test
+    public void setDeviceCapabilitiesSucceed()
+    {
+        // arrange
+        IndividualEnrollment individualEnrollment = makeStandardEnrollment();
+        final DeviceCapabilities capabilities = new DeviceCapabilities();
+        assertNotEquals(capabilities, Deencapsulation.getField(individualEnrollment, "capabilities"));
+
+        // act
+        Deencapsulation.invoke(individualEnrollment, "setCapabilities", new Class[] {DeviceCapabilities.class}, capabilities);
+
+        // assert
+        assertEquals(capabilities, Deencapsulation.getField(individualEnrollment, "capabilities"));
     }
 
     /* SRS_INDIVIDUAL_ENROLLMENT_21_049: [The IndividualEnrollment shall provide an empty constructor to make GSON happy.] */

@@ -141,6 +141,11 @@ public class IndividualEnrollment extends Serializable
     @SerializedName(ETAG_TAG)
     private String etag;
 
+    private static final String DEVICE_CAPABILITIES_TAG = "capabilities";
+    @Expose(serialize = true, deserialize = true)
+    @SerializedName(DEVICE_CAPABILITIES_TAG)
+    private DeviceCapabilities capabilities;
+
     /**
      * CONSTRUCTOR
      * 
@@ -271,6 +276,12 @@ public class IndividualEnrollment extends Serializable
         if(result.etag != null)
         {
             this.setEtag(result.etag);
+        }
+
+        /* SRS_INDIVIDUAL_ENROLLMENT_34_052: [If the device capabilities is not null, the constructor shall judge and store it using the IndividualEnrollment setter.] */
+        if (result.capabilities != null)
+        {
+            this.setCapabilities(result.capabilities);
         }
     }
 
@@ -644,6 +655,18 @@ public class IndividualEnrollment extends Serializable
 
         /* SRS_INDIVIDUAL_ENROLLMENT_21_048: [The setEtag shall store the provided etag.] */
         this.etag = etag;
+    }
+
+    public DeviceCapabilities getCapabilities()
+    {
+        /* SRS_INDIVIDUAL_ENROLLMENT_34_054: [This function shall return the saved capabilities.] */
+        return this.capabilities;
+    }
+
+    public void setCapabilities(DeviceCapabilities capabilities)
+    {
+        /* SRS_INDIVIDUAL_ENROLLMENT_34_053: [This function shall save the provided capabilities.] */
+        this.capabilities = capabilities;
     }
 
     /**
